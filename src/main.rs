@@ -1,28 +1,48 @@
-mod application;
 #[rustfmt::skip]
 mod config;
-mod window;
+mod app;
+mod modals;
+mod setup;
 
-use gettextrs::{gettext, LocaleCategory};
-use gtk::{gio, glib};
+use gtk::prelude::ApplicationExt;
+use relm4::{
+    actions::{AccelsPlus, RelmAction, RelmActionGroup},
+    gtk, main_application, RelmApp,
+};
 
-use self::application::Application;
-use self::config::{GETTEXT_PACKAGE, LOCALEDIR, RESOURCES_FILE};
+use app::App;
+use setup::setup;
+
+relm4::new_action_group!(AppActionGroup, "app");
+relm4::new_stateless_action!(QuitAction, AppActionGroup, "quit");
 
 fn main() {
-    // Initialize logger
-    pretty_env_logger::init();
+    // Enable logging
+    tracing_subscriber::fmt()
+        .with_span_events(tracing_subscriber::fmt::format::FmtSpan::FULL)
+        .with_max_level(tracing::Level::INFO)
+        .init();
 
-    // Prepare i18n
-    gettextrs::setlocale(LocaleCategory::LcAll, "");
-    gettextrs::bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR).expect("Unable to bind the text domain");
-    gettextrs::textdomain(GETTEXT_PACKAGE).expect("Unable to switch to the text domain");
+    setup();
 
-    glib::set_application_name(&gettext("Based"));
+    let app = main_application();
+    app.set_resource_base_path(Some("/com/kylobytes/Based/"));
 
-    let res = gio::Resource::load(RESOURCES_FILE).expect("Could not load gresource file");
-    gio::resources_register(&res);
+    let actions = RelmActionGroup::<AppActionGroup>::new();
 
-    let app = Application::default();
-    app.run();
+    let quit_action = {
+        let app = app.clone();
+        RelmAction::<QuitAction>::new_stateless(move |_| {
+            app.quit();
+        })
+    };
+    actions.add_action(&quit_action);
+
+    app.set_accelerators_for_action::<QuitAction>(&["<Control>q"]);
+
+    app.set_action_group(Some(&actions.into_action_group()));
+
+    let app = RelmApp::with_app(app);
+
+    app.run::<App>(());
 }
