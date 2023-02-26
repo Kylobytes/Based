@@ -16,24 +16,74 @@
       </item>
     </section>
   </menu>
-  <template class="ExampleApplicationWindow" parent="GtkApplicationWindow">
-    <child type="titlebar">
-      <object class="GtkHeaderBar" id="headerbar">
-        <child type="end">
-          <object class="GtkMenuButton" id="appmenu_button">
-            <property name="icon-name">open-menu-symbolic</property>
-            <property name="menu-model">primary_menu</property>
+  <template class="ApplicationWindow" parent="AdwApplicationWindow">
+    <property name="content">
+      <object class="AdwFlap" id="main_view">
+        <binding name="reveal-flap">
+          <lookup name="active">flap_control</lookup>
+        </binding>
+        <property name="reveal-flap">true</property>
+        <child type="flap">
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="width-request">200</property>
+            <child type="start">
+              <object class="AdwHeaderBar">
+                <property name="show-end-title-buttons">false</property>
+                <child type="start">
+                  <object class="GtkButton">
+                    <property name="icon-name">list-add-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkListView" />
+            </child>
+          </object>
+        </child>
+        <child type="separator">
+          <object class="GtkSeparator">
+            <property name="orientation">vertical</property>
+          </object>
+        </child>
+        <child type="content">
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="vexpand">true</property>
+            <property name="hexpand">true</property>
+            <child>
+              <object class="AdwHeaderBar">
+                <child type="start">
+                  <object class="GtkToggleButton" id="flap_control">
+                    <property name="icon-name">sidebar-show-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Hide/Reveal the connections menu</property>
+                    <property name="active">true</property>
+                  </object>
+                </child>
+                <child type="end">
+                  <object class="GtkMenuButton" id="appmenu_button">
+                    <property name="icon-name">open-menu-symbolic</property>
+                    <property name="menu-model">primary_menu</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="height-request">180</property>
+                <child>
+                  <object class="GtkTextView">
+                    <style>
+                      <class name="scripts-input" />
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
       </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="label">
-        <property name="label" translatable="yes">Hello world!</property>
-        <style>
-          <class name="title-header"/>
-        </style>
-      </object>
-    </child>
+    </property>
   </template>
 </interface>

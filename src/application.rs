@@ -1,12 +1,14 @@
 use gettextrs::gettext;
 use log::{debug, info};
 
-use gtk::prelude::*;
-use gtk::subclass::prelude::*;
+use adw::prelude::*;
+use adw::subclass::prelude::*;
+use glib::clone;
 use gtk::{gdk, gio, glib};
+use gtk_macros::action;
 
 use crate::config::{APP_ID, PKGDATADIR, PROFILE, VERSION};
-use crate::window::ExampleApplicationWindow;
+use crate::window::ApplicationWindow;
 
 mod imp {
     use super::*;
@@ -14,22 +16,22 @@ mod imp {
     use once_cell::sync::OnceCell;
 
     #[derive(Debug, Default)]
-    pub struct ExampleApplication {
-        pub window: OnceCell<WeakRef<ExampleApplicationWindow>>,
+    pub struct Application {
+        pub window: OnceCell<WeakRef<ApplicationWindow>>,
     }
 
     #[glib::object_subclass]
-    impl ObjectSubclass for ExampleApplication {
-        const NAME: &'static str = "ExampleApplication";
-        type Type = super::ExampleApplication;
-        type ParentType = gtk::Application;
+    impl ObjectSubclass for Application {
+        const NAME: &'static str = "Application";
+        type Type = super::Application;
+        type ParentType = adw::Application;
     }
 
-    impl ObjectImpl for ExampleApplication {}
+    impl ObjectImpl for Application {}
 
-    impl ApplicationImpl for ExampleApplication {
+    impl ApplicationImpl for Application {
         fn activate(&self) {
-            debug!("GtkApplication<ExampleApplication>::activate");
+            debug!("GtkApplication<Application>::activate");
             self.parent_activate();
             let app = self.obj();
 
@@ -39,7 +41,7 @@ mod imp {
                 return;
             }
 
-            let window = ExampleApplicationWindow::new(&app);
+            let window = ApplicationWindow::new(&app);
             self.window
                 .set(window.downgrade())
                 .expect("Window already set.");
@@ -48,7 +50,7 @@ mod imp {
         }
 
         fn startup(&self) {
-            debug!("GtkApplication<ExampleApplication>::startup");
+            debug!("GtkApplication<Application>::startup");
             self.parent_startup();
             let app = self.obj();
 
@@ -61,37 +63,40 @@ mod imp {
         }
     }
 
-    impl GtkApplicationImpl for ExampleApplication {}
+    impl GtkApplicationImpl for Application {}
+    impl AdwApplicationImpl for Application {}
 }
 
 glib::wrapper! {
-    pub struct ExampleApplication(ObjectSubclass<imp::ExampleApplication>)
-        @extends gio::Application, gtk::Application,
+    pub struct Application(ObjectSubclass<imp::Application>)
+        @extends gio::Application, gtk::Application, adw::Application,
         @implements gio::ActionMap, gio::ActionGroup;
 }
 
-impl ExampleApplication {
-    fn main_window(&self) -> ExampleApplicationWindow {
+impl Application {
+    fn main_window(&self) -> ApplicationWindow {
         self.imp().window.get().unwrap().upgrade().unwrap()
     }
 
     fn setup_gactions(&self) {
         // Quit
-        let action_quit = gio::ActionEntry::builder("quit")
-            .activate(move |app: &Self, _, _| {
-                // This is needed to trigger the delete event and saving the window state
+        action!(
+            self,
+            "quit",
+            clone!(@weak self as app => move |_, _| {
                 app.main_window().close();
                 app.quit();
             })
-            .build();
+        );
 
         // About
-        let action_about = gio::ActionEntry::builder("about")
-            .activate(|app: &Self, _, _| {
+        action!(
+            self,
+            "about",
+            clone!(@weak self as app => move |_, _| {
                 app.show_about_dialog();
             })
-            .build();
-        self.add_action_entries([action_quit, action_about]);
+        );
     }
 
     // Sets up keyboard shortcuts
@@ -113,18 +118,17 @@ impl ExampleApplication {
     }
 
     fn show_about_dialog(&self) {
-        let dialog = gtk::AboutDialog::builder()
-            .logo_icon_name(APP_ID)
-            // Insert your license of choice here
-            // .license_type(gtk::License::MitX11)
-            // Insert your website here
-            // .website("https://gitlab.gnome.org/bilelmoussaoui/based/")
+        let dialog = adw::AboutWindow::builder()
+            .application_icon(APP_ID)
+            .application_name("Based")
+            .developer_name("Kent Delante")
+            .license_type(gtk::License::Gpl30)
+            .website("https://www.kylobytes.com/projects/based")
             .version(VERSION)
             .transient_for(&self.main_window())
             .translator_credits(gettext("translator-credits"))
             .modal(true)
-            .authors(vec!["Kent Delante"])
-            .artists(vec!["Kent Delante"])
+            .developers(vec!["Kent Delante".to_string()])
             .build();
 
         dialog.present();
@@ -139,7 +143,7 @@ impl ExampleApplication {
     }
 }
 
-impl Default for ExampleApplication {
+impl Default for Application {
     fn default() -> Self {
         glib::Object::builder()
             .property("application-id", APP_ID)
