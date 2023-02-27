@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="ConnectionDialog" parent="GtkWindow">
+    <property name="title" translatable="yes">Add Connection</property>
+    <property name="modal">true</property>
+    <property name="default-height">600</property>
+    <property name="default-width">400</property>
+    <child type="action">
+      <object class="GtkButton">
+        <property name="label" translatable="yes">_Connect</property>
+      </object>
+    </child>
+    <child type="action">
+      <object class="GtkButton">
+        <property name="label" translatable="true">Cancel</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="hscrollbar-policy">never</property>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="margin-start">24</property>
+            <property name="margin-end">24</property>
+            <property name="margin-top">12</property>
+            <property name="margin-end">12</property>
+            <child>
+              <object class="AdwPreferencesGroup">
+                <property name="title" translatable="yes">New Connection</property>
+                <property name="description" translatable="yes">Add a new database connection</property>
+                <child>
+                  <object class="AdwComboRow">
+                    <property name="title" translatable="yes">Database</property>
+                    <property name="model">
+                      <object class="GtkStringList">
+                        <items>
+                          <item>MariaDB</item>
+                          <item>MySQL</item>
+                          <item>PostgreSQL</item>
+                          <item>SQLite</item>
+                        </items>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwEntryRow">
+                    <property name="title" translatable="yes">Name</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwEntryRow">
+                    <property name="title" translatable="yes">Host</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwEntryRow">
+                    <property name="title" translatable="yes">Port</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwEntryRow">
+                    <property name="title" translatable="yes">User</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="AdwPasswordEntryRow">
+                    <property name="title" translatable="yes">Password</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

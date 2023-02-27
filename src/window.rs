@@ -1,6 +1,9 @@
 use adw::prelude::*;
 use adw::subclass::prelude::*;
+use glib::clone;
 use gtk::{gio, glib};
+
+use crate::modals::connection::ConnectionDialog;
 
 use crate::application::Application;
 use crate::config::{APP_ID, PROFILE};
@@ -13,6 +16,8 @@ mod imp {
     pub struct ApplicationWindow {
         #[template_child]
         pub main_view: TemplateChild<adw::Flap>,
+        #[template_child]
+        pub add_connection_button: TemplateChild<gtk::Button>,
         pub settings: gio::Settings,
     }
 
@@ -20,6 +25,7 @@ mod imp {
         fn default() -> Self {
             Self {
                 main_view: TemplateChild::default(),
+                add_connection_button: TemplateChild::default(),
                 settings: gio::Settings::new(APP_ID),
             }
         }
@@ -81,7 +87,11 @@ glib::wrapper! {
 
 impl ApplicationWindow {
     pub fn new(app: &Application) -> Self {
-        glib::Object::builder().property("application", app).build()
+        let win: Self = glib::Object::builder().property("application", app).build();
+
+        win.connect_signals();
+
+        win
     }
 
     fn save_window_size(&self) -> Result<(), glib::BoolError> {
@@ -110,5 +120,13 @@ impl ApplicationWindow {
         if is_maximized {
             self.maximize();
         }
+    }
+
+    fn connect_signals(&self) {
+        self.imp().add_connection_button.connect_clicked(clone!(@weak self as window => move |_| {
+            let dialog = ConnectionDialog::new();
+            dialog.set_transient_for(Some(&window.upcast::<gtk::Window>()));
+            dialog.show();
+        }));
     }
 }

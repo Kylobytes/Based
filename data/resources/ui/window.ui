@@ -17,6 +17,8 @@
     </section>
   </menu>
   <template class="ApplicationWindow" parent="AdwApplicationWindow">
+    <property name="default-width">1280</property>
+    <property name="default-height">720</property>
     <property name="content">
       <object class="AdwFlap" id="main_view">
         <binding name="reveal-flap">
@@ -31,7 +33,7 @@
               <object class="AdwHeaderBar">
                 <property name="show-end-title-buttons">false</property>
                 <child type="start">
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="add_connection_button">
                     <property name="icon-name">list-add-symbolic</property>
                   </object>
                 </child>
