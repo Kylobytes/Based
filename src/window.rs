@@ -33,7 +33,7 @@ mod imp {
     #[template(resource = "/com/kylobytes/Based/ui/window.ui")]
     pub struct ApplicationWindow {
         #[template_child]
-        pub main_view: TemplateChild<adw::Flap>,
+        pub main_view: TemplateChild<adw::OverlaySplitView>,
         #[template_child]
         pub add_connection_button: TemplateChild<gtk::Button>,
         pub settings: gio::Settings,
