@@ -142,10 +142,14 @@ impl ApplicationWindow {
     }
 
     fn connect_signals(&self) {
-        self.imp().add_connection_button.connect_clicked(clone!(@weak self as window => move |_| {
-            let dialog = ConnectionDialog::new();
-            dialog.set_transient_for(Some(&window.upcast::<gtk::Window>()));
-            dialog.show();
-        }));
+        self.imp().add_connection_button.connect_clicked(clone!(
+            #[weak(rename_to = window)]
+            self,
+            move |_| {
+                let dialog = ConnectionDialog::new();
+                dialog.set_transient_for(Some(&window.upcast::<gtk::Window>()));
+                dialog.show();
+            }
+        ));
     }
 }

@@ -102,19 +102,27 @@ impl Application {
         action!(
             self,
             "quit",
-            clone!(@weak self as app => move |_, _| {
-                app.main_window().close();
-                app.quit();
-            })
+            clone!(
+                #[weak(rename_to = app)]
+                self,
+                move |_, _| {
+                    app.main_window().close();
+                    app.quit();
+                }
+            )
         );
 
         // About
         action!(
             self,
             "about",
-            clone!(@weak self as app => move |_, _| {
-                app.show_about_dialog();
-            })
+            clone!(
+                #[weak(rename_to = app)]
+                self,
+                move |_, _| {
+                    app.show_about_dialog();
+                }
+            )
         );
     }
 
