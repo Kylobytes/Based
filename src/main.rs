@@ -14,8 +14,7 @@
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Based. If not, see <https://www.gnu.org/licenses/>. 
-
+// along with Based. If not, see <https://www.gnu.org/licenses/>.
 
 mod application;
 #[rustfmt::skip]
