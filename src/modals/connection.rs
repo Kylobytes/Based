@@ -16,9 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Based. If not, see <https://www.gnu.org/licenses/>.
 
-
-use gtk::subclass::prelude::*;
 use gtk::glib;
+use gtk::subclass::prelude::*;
 
 mod imp {
     use super::*;
@@ -54,9 +53,13 @@ glib::wrapper! {
 }
 
 impl Default for ConnectionDialog {
-    fn default() -> Self { glib::Object::new::<Self>() }
+    fn default() -> Self {
+        glib::Object::new::<Self>()
+    }
 }
 
 impl ConnectionDialog {
-    pub fn new() -> Self { Self::default() }
+    pub fn new() -> Self {
+        Self::default()
+    }
 }

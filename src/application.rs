@@ -137,20 +137,18 @@ impl Application {
     }
 
     fn show_about_dialog(&self) {
-        let dialog = adw::AboutWindow::builder()
+        let dialog = adw::AboutDialog::builder()
             .application_icon(APP_ID)
             .application_name("Based")
             .developer_name("Kent Delante")
             .license_type(gtk::License::Gpl30)
             .website("https://www.kylobytes.com/projects/based")
             .version(VERSION)
-            .transient_for(&self.main_window())
             .translator_credits(gettext("translator-credits"))
-            .modal(true)
             .developers(vec!["Kent Delante".to_string()])
             .build();
 
-        dialog.present();
+        dialog.present(Some(&self.main_window()));
     }
 
     pub fn run(&self) -> glib::ExitCode {
