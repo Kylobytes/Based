@@ -22,7 +22,7 @@ use log::{debug, info};
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use glib::clone;
-use gtk::{gdk, gio, glib};
+use gtk::{gio, glib};
 use gtk_macros::action;
 
 use crate::config::{APP_ID, PKGDATADIR, PROFILE, VERSION};
@@ -134,13 +134,6 @@ impl Application {
     fn setup_css(&self) {
         let provider = gtk::CssProvider::new();
         provider.load_from_resource("/com/kylobytes/Based/style.css");
-        if let Some(display) = gdk::Display::default() {
-            gtk::StyleContext::add_provider_for_display(
-                &display,
-                &provider,
-                gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
-            );
-        }
     }
 
     fn show_about_dialog(&self) {
