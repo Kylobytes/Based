@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Based. If not, see <https://www.gnu.org/licenses/>.
 
+use adw::subclass::prelude::*;
 use gtk::glib;
-use gtk::subclass::prelude::*;
 
 mod imp {
     use super::*;
@@ -30,7 +30,7 @@ mod imp {
     impl ObjectSubclass for ConnectionDialog {
         const NAME: &'static str = "ConnectionDialog";
         type Type = super::ConnectionDialog;
-        type ParentType = gtk::Window;
+        type ParentType = adw::Dialog;
 
         fn class_init(klass: &mut Self::Class) {
             klass.bind_template();
@@ -43,13 +43,12 @@ mod imp {
 
     impl ObjectImpl for ConnectionDialog {}
     impl WidgetImpl for ConnectionDialog {}
-    impl WindowImpl for ConnectionDialog {}
-    impl DialogImpl for ConnectionDialog {}
+    impl AdwDialogImpl for ConnectionDialog {}
 }
 
 glib::wrapper! {
     pub struct ConnectionDialog(ObjectSubclass<imp::ConnectionDialog>)
-        @extends gtk::Widget, gtk::Window;
+    @extends gtk::Widget, adw::Dialog;
 }
 
 impl Default for ConnectionDialog {

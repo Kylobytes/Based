@@ -146,7 +146,7 @@ impl ApplicationWindow {
             self,
             move |_| {
                 let dialog = ConnectionDialog::new();
-                dialog.set_transient_for(Some(&window.upcast::<gtk::Window>()));
+                dialog.present(Some(&window));
             }
         ));
     }
