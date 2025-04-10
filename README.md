@@ -1,6 +1,6 @@
 # Based
 
-A graphical database client and manager built with [Rust, GTK and Adwaita](https://gtk-rs.org).
+A graphical database client and manager for the GNU/Linux desktop.
 
 ## License
 
