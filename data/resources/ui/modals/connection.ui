@@ -64,14 +64,24 @@
                 <property name="title" translatable="yes">Password</property>
               </object>
             </child>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="halign">end</property>
+                <property name="spacing">8</property>
+                <property name="margin-top">32</property>
+                <property name="margin-bottom">8</property>
                 <child>
-                  <object class="AdwEntryRow">
-                    <property name="title" translatable="yes">User</property>
+                  <object class="GtkButton">
+                    <property name="label" translatable="yes">Test</property>
                   </object>
                 </child>
                 <child>
-                  <object class="AdwPasswordEntryRow">
-                    <property name="title" translatable="yes">Password</property>
+                  <object class="GtkButton">
+                    <style>
+                      <class name="accent" />
+                    </style>
+                    <property name="label" translatable="yes">Connect</property>
                   </object>
                 </child>
               </object>
